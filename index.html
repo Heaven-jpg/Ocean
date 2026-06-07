@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ocean</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        body {
+            background: #2c1a11;
+            background-image: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), url('https://images.unsplash.com/photo-1541123437800-1bb1317badc2?q=80&w=600&auto=format&fit=crop');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            color: #f5f5dc;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+        .container {
+            width: 100%;
+            max-width: 500px;
+        }
+        h1 {
+            text-align: center;
+            font-size: 36px;
+            color: #f4d068;
+            text-shadow: 2px 2px 4px #000;
+            margin-bottom: 20px;
+            letter-spacing: 2px;
+        }
+        .stats-row {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        .stat-box {
+            background: #4a2c1b;
+            border: 3px solid #6e473b;
+            border-radius: 8px;
+            padding: 12px 5px;
+            text-align: center;
+            box-shadow: inset 0 0 10px rgba(0,0,0,0.5), 0 4px 6px rgba(0,0,0,0.3);
+        }
+        .stat-val {
+            font-size: 18px;
+            font-weight: bold;
+            color: #f4d068;
+            margin-bottom: 4px;
+        }
+        .stat-lbl {
+            font-size: 11px;
+            color: #d2b48c;
+            text-transform: uppercase;
+        }
+        .progress-container {
+            background: #1a0f0a;
+            border: 2px solid #5c3a21;
+            border-radius: 10px;
+            padding: 4px;
+            margin-bottom: 25px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+        }
+        .progress-bar {
+            height: 16px;
+            background: linear-gradient(90deg, #8b5a2b, #f4d068);
+            border-radius: 6px;
+            width: 0%;
+            transition: width 0.4s ease;
+        }
+        .setup-card {
+            background: #3d2314;
+            border: 3px solid #5c3a21;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 25px;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.5);
+        }
+        .setup-title {
+            font-size: 18px;
+            color: #f4d068;
+            margin-bottom: 15px;
+            text-align: center;
+            border-bottom: 1px solid #5c3a21;
+            padding-bottom: 8px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            font-size: 14px;
+            color: #d2b48c;
+            margin-bottom: 5px;
+        }
+        .range-inputs {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+        input[type="number"] {
+            background: #22120b;
+            border: 2px solid #5c3a21;
+            border-radius: 6px;
+            color: #fff;
+            padding: 8px;
+            font-size: 15px;
+            width: 100%;
+        }
+        input[type="range"] {
+            width: 100%;
+            margin-top: 5px;
+            accent-color: #f4d068;
+        }
+        .slider-labels {
+            display: flex;
+            justify-content: space-between;
+            font-size: 12px;
+            color: #d2b48c;
+            margin-top: 2px;
+        }
+        .btn {
+            background: linear-gradient(#8b5a2b, #5c3a21);
+            color: #fff;
+            border: 2px solid #f4d068;
+            padding: 12px;
+            border-radius: 8px;
+            font-weight: bold;
+            font-size: 16px;
+            cursor: pointer;
+            width: 100%;
+            text-shadow: 1px 1px 2px #000;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.4);
+        }
+        .btn:active {
+            transform: translateY(1px);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.4);
+        }
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+            margin-bottom: 25px;
+        }
+        .box {
+            background: #5c3a21;
+            background-image: linear-gradient(rgba(255,255,255,0.05), rgba(0,0,0,0.1));
+            border: 3px solid #3d2314;
+            border-radius: 8px;
+            padding: 20px 0;
+            text-align: center;
+            font-size: 16px;
+            font-weight: bold;
+            color: #f5f5dc;
+            cursor: pointer;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+            transition: all 0.1s ease;
+            user-select: none;
+        }
+        .box.checked {
+            background: #2e4a22;
+            border-color: #4caf50;
+            color: #81c784;
+            text-decoration: line-through;
+            cursor: default;
+            box-shadow: inset 0 4px 8px rgba(0,0,0,0.6);
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Ocean</h1>
+    
+    <div class="stats-row">
+        <div class="stat-box">
+            <div class="stat-val" id="stat-max">৳0</div>
+            <div class="stat-lbl">Target</div>
+        </div>
+        <div class="stat-box">
+            <div class="stat-val" id="stat-saved">৳0</div>
+            <div class="stat-lbl">Saved</div>
+        </div>
+        <div class="stat-box">
+            <div class="stat-val" id="stat-boxes">0/0</div>
+            <div class="stat-lbl">Ticked</div>
+        </div>
+    </div>
+
+    <div class="progress-container">
+        <div class="progress-bar" id="progress-bar"></div>
+    </div>
+
+    <div class="setup-card" id="setup-card">
+        <div class="setup-title">Setup New Challenge</div>
+        <div class="form-group">
+            <label>Money Range (Must end with 0, e.g. 100 to 500)</label>
+            <div class="range-inputs">
+                <input type="number" id="min-money" value="100" step="10">
+                <input type="number" id="max-money" value="500" step="10">
+            </div>
+        </div>
+        <div class="form-group">
+            <label>Amount of Grid Boxes: <span id="slider-val" style="color: #f4d068; font-weight: bold;">50</span></label>
+            <input type="range" id="grid-slider" min="10" max="100" value="50" step="10">
+            <div class="slider-labels">
+                <span>10</span><span>30</span><span>50</span><span>70</span><span>90</span><span>100</span>
+            </div>
+        </div>
+        <button class="btn" id="generate-btn">Generate Grid</button>
+    </div>
+
+    <div class="grid" id="cash-grid"></div>
+    
+    <button class="btn" id="reset-layout-btn" style="display: none; background: #5a2b2b; border-color: #ff6b6b; margin-bottom: 40px;">Reset Entire App</button>
+</div>
+
+<script>
+    const minMoneyInput = document.getElementById('min-money');
+    const maxMoneyInput = document.getElementById('max-money');
+    const gridSlider = document.getElementById('grid-slider');
+    const sliderValDisplay = document.getElementById('slider-val');
+    const generateBtn = document.getElementById('generate-btn');
+    const resetLayoutBtn = document.getElementById('reset-layout-btn');
+    const setupCard = document.getElementById('setup-card');
+    const gridElement = document.getElementById('cash-grid');
+    
+    const statMax = document.getElementById('stat-max');
+    const statSaved = document.getElementById('stat-saved');
+    const statBoxes = document.getElementById('stat-boxes');
+    const progressBar = document.getElementById('progress-bar');
+
+    let appState = {
+        active: false,
+        values: [],
+        checkedIndices: []
+    };
+
+    // Slider checkpoint handler
+    gridSlider.addEventListener('input', (e) => {
+        sliderValDisplay.innerText = e.target.value;
+    });
+
+    // Helper to round value to nearest 10 ending in 0
+    function roundToTen(num) {
+        return Math.round(num / 10) * 10;
+    }
+
+    function generateCustomAmounts(min, max, count) {
+        let arr = [];
+        let cleanMin = roundToTen(min);
+        let cleanMax = roundToTen(max);
+        
+        if (cleanMin < 10) cleanMin = 10;
+        if (cleanMax <= cleanMin) cleanMax = cleanMin + 10;
+
+        // Populate and shuffle values randomly
+        for (let i = 0; i < count; i++) {
+            let randomVal = Math.floor(Math.random() * ((cleanMax - cleanMin) / 10 + 1)) * 10 + cleanMin;
+            arr.push(randomVal);
+        }
+        return arr;
+    }
+
+    function saveToStorage() {
+        localStorage.setItem('ocean_app_state', JSON.stringify(appState));
+    }
+
+    function renderApp() {
+        if (!appState.active) {
+            setupCard.style.display = 'block';
+            gridElement.style.display = 'none';
+            resetLayoutBtn.style.display = 'none';
+            
+            statMax.innerText = '৳0';
+            statSaved.innerText = '৳0';
+            statBoxes.innerText = '0/0';
+            progressBar.style.width = '0%';
+            return;
+        }
+
+        setupCard.style.display = 'none';
+        gridElement.style.display = 'grid';
+        resetLayoutBtn.style.display = 'block';
+        gridElement.innerHTML = '';
+
+        let totalTarget = appState.values.reduce((a, b) => a + b, 0);
+        let totalSaved = 0;
+
+        appState.values.forEach((value, index) => {
+            const box = document.createElement('div');
+            box.classList.add('box');
+            box.innerText = `৳${value}`;
+
+            if (appState.checkedIndices.includes(index)) {
+                box.classList.add('checked');
+                totalSaved += value;
+            } else {
+                box.addEventListener('click', () => {
+                    // Lock-in functionality: Only triggers if not checked yet
+                    appState.checkedIndices.push(index);
+                    saveToStorage();
+                    renderApp();
+                });
+            }
+            gridElement.appendChild(box);
+        });
+
+        // Track stats calculations
+        statMax.innerText = `৳${totalTarget}`;
+        statSaved.innerText = `৳${totalSaved}`;
+        statBoxes.innerText = `${appState.checkedIndices.length}/${appState.values.length}`;
+        
+        let pct = (appState.checkedIndices.length / appState.values.length) * 100;
+        progressBar.style.width = `${pct}%`;
+    }
+
+    generateBtn.addEventListener('click', () => {
+        const count = parseInt(gridSlider.value);
+        const min = parseInt(minMoneyInput.value) || 10;
+        const max = parseInt(maxMoneyInput.value) || 100;
+
+        appState.values = generateCustomAmounts(min, max, count);
+        appState.checkedIndices = [];
+        appState.active = true;
+        
+        saveToStorage();
+        renderApp();
+    });
+
+    resetLayoutBtn.addEventListener('click', () => {
+        if (confirm('Are you completely sure you want to reset Ocean and delete your saved data?')) {
+            appState = { active: false, values: [], checkedIndices: [] };
+            localStorage.removeItem('ocean_app_state');
+            renderApp();
+        }
+    });
+
+    // Boot execution loop
+    const saved = localStorage.getItem('ocean_app_state');
+    if (saved) {
+        appState = JSON.parse(saved);
+    }
+    renderApp();
+</script>
+
+</body>
+</html>
